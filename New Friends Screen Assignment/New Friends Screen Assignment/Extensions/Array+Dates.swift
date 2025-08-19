@@ -31,4 +31,20 @@ extension Array where Element == Date {
     }
     return maxStreak
   }
+  
+  func currentStreakFromToday(calendar: Calendar = .current, today: Date = Date()) -> Int {
+    let dayStarts = self.map { calendar.startOfDay(for: $0) }
+    let set = Set(dayStarts)
+    let todayStart = calendar.startOfDay(for: today)
+
+    var streak = 1
+    var cursor = todayStart
+
+    while let prev = calendar.date(byAdding: .day, value: -1, to: cursor),
+          set.contains(prev) {
+      streak += 1
+      cursor = prev
+    }
+    return streak
+  }
 }

@@ -22,7 +22,7 @@ struct AvatarCellInfoService {
         user.userId == taskProgress.userId
       }
       
-      let streak = progress.flatMap({$0.progressDates}).maxConsecutiveDays()
+      let streak = progress.flatMap({$0.progressDates}).currentStreakFromToday()
       
       var dailyTasksCount: Int?
       
@@ -38,7 +38,7 @@ struct AvatarCellInfoService {
       let avatarCellInfo = FriendAvatarCellInfo(
         userName: user.name,
         photoUrl: user.photoUrl,
-        dayStreak: streak + 1,
+        dayStreak: streak,
         dailyTasksCount: dailyTasksCount,
         todayDoneTasksCount: todayTasksCount
       )

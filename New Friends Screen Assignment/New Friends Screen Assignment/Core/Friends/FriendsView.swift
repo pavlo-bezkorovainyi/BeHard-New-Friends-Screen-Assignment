@@ -28,6 +28,11 @@ struct FriendsView: View {
       activityTitle
       activityList
     }
+    .refreshable {
+      Task {
+        try? await loadData()
+      }
+    }
     .overlay(flyingText)
     .task {
       do {
@@ -50,7 +55,6 @@ struct FriendsView: View {
         print("Failed listen to new progresses")
       }
     }
-    
   }
   
   @MainActor
@@ -116,9 +120,7 @@ extension FriendsView {
   
   @ViewBuilder
   private var activityList: some View {
-    if let todaySection = activitySections.first,
-       !todaySection.isEmpty,
-        todaySection.items.isEmpty {
+    if !activitySections.contains(where: { Calendar.current.isDateInToday($0.date ?? Date() )}) {
       todayEmptyActivityPlaceholder
     } else {
       LazyVStack {
@@ -186,7 +188,7 @@ extension FriendsView {
           .foregroundStyle(Color(hex: "#999999"))
         
         Button {
-          //TODO: NUDGE
+          flyingTextTapped(text: "💪")
         } label: {
           Text("Nudge 💪")
             .font(.system(size: 17, weight: .semibold))
